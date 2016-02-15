@@ -1,0 +1,13 @@
+{
+  "name": "angular-inviewport",
+  "version": "0.0.1",
+  "description": "AngularJS directive that shows content only if it is visible.",
+  "main": "angular-inviewport.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karstil/angular-inviewport.git"
+  },
+  "author": "Florian Schmidt",
+  "license": "MIT",
+  "homepage": "https://github.com/karstil/angular-inviewport"
+}
