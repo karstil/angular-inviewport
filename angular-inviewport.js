@@ -1,4 +1,4 @@
-angular.module('angular-inviewport', []).directive('inViewport', [function () {
+var foo = angular.module('angular-inviewport', []).directive('inViewport', [function () {
 
     return {
         restrict: 'A',
@@ -77,3 +77,4 @@ angular.module('angular-inviewport', []).directive('inViewport', [function () {
         }]
     };
 });
+module.exports = foo;
