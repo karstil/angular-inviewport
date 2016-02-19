@@ -1,4 +1,4 @@
-var foo = angular.module('angular-inviewport', []).directive('inViewport', [function () {
+module.exports = angular.module('angular-inviewport', []).directive('inViewport', [function () {
 
     return {
         restrict: 'A',
@@ -13,7 +13,7 @@ var foo = angular.module('angular-inviewport', []).directive('inViewport', [func
             var checkVisible = function () {
                 var isVisible = isInsideContainer();
                 if(isVisible !== wasVisible){
-                    setVisible(isVisible);
+                    $scope.$apply();
                 }
             };
 
@@ -47,16 +47,25 @@ var foo = angular.module('angular-inviewport', []).directive('inViewport', [func
                 }
                 return !(elementRect.right < viewPortRect.left || elementRect.left > viewPortRect.right || elementRect.bottom < viewPortRect.top || elementRect.top > viewPortRect.bottom);
             };
-
+            var content, childScope;
             function setVisible(show) {
                 if (show) {
-                    $transclude(function(clone) {
+                    $transclude(function(clone, scope) {
                         $element.empty();
                         $element.append(clone);
                         wasVisible = true;
+                        content = clone;
+                        childScope = scope;
                     });
                 } else {
-                    $element.empty();
+                    if(childScope) {
+                        childScope.$destroy()
+                        childScope = null;
+                    }
+                    if (content) {
+                        $element.empty();
+                        content = null;
+                    }
                     wasVisible = false;
                 }
             };
@@ -77,4 +86,3 @@ var foo = angular.module('angular-inviewport', []).directive('inViewport', [func
         }]
     };
 });
-module.exports = foo;
