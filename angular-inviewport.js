@@ -11,15 +11,20 @@ module.exports = angular.module('angular-inviewport', []).directive('inViewport'
             var hideAgain = !(attributes.inViewportHide == "false");
             var alreadyShown = false;
             var parentElement = controller ? controller.getElement() : null;
+            var unregisterDestroyListener;
+            var rootScope = $scope.$root;
 
             var refresh = function () {
-                $scope.$root.$broadcast('inViewportEvent');
+                rootScope.$broadcast('inViewportEvent');
             };
-            var unregisterListener;
+            var unregisterEventListener;
             var bindEvents = function () {
                 if(!bound) {
-                    unregisterListener = $scope.$on('inViewportEvent', function (event) {
+                    unregisterEventListener = $scope.$on('inViewportEvent', function (event) {
                         $scope.$digest();
+                    });
+                    unregisterDestroyListener = $scope.$on('$destroy', function () {
+                        unbindEvents();
                     });
                     if(controller) {
                         controller.registerChild();
@@ -33,7 +38,8 @@ module.exports = angular.module('angular-inviewport', []).directive('inViewport'
 
             var unbindEvents = function () {
                 if(bound) {
-                    unregisterListener();
+                    unregisterEventListener();
+                    unregisterDestroyListener();
                     if (controller) {
                         controller.unregisterChild();
                     }
@@ -81,9 +87,6 @@ module.exports = angular.module('angular-inviewport', []).directive('inViewport'
             };
             var unregister = $scope.$watch(isInsideContainer, show);
             bindEvents();
-            $scope.$on('$destroy', function () {
-                unbindEvents();
-            });
         }
     }
 }]).directive('inViewportContainer', function () {
